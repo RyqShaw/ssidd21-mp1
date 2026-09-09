@@ -1,9 +1,11 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class LocationManager : MonoBehaviour
 {
+    public UnityEvent teleported;
     public GameObject[] locations;
     public InputActionReference inputAction;
     private int _currentLocation = 0;
@@ -14,6 +16,7 @@ public class LocationManager : MonoBehaviour
         inputAction.action.performed += (ctx) =>
         {
             GoToNextLocation();
+            teleported.Invoke();
         };
     }
 

@@ -1,20 +1,41 @@
 using System;
 using UnityEngine;
-
+ 
 public class CometOrbit : MonoBehaviour
 {
-    public float gravity = 0.2f;
-    private Vector3 _velocity = Vector3.zero;
+    public Vector3 velocity;
+
+    public double gravity = 0.2;
+    public GameObject attractor;
+
+    void Start()
+    {
+        if (attractor == null)
+        {
+            attractor = GameObject.Find("Planet");
+        }
+    }
+    
     void Update()
     {
-        double distance = Math.Sqrt( Math.Pow(transform.position.x, 2) + Math.Pow (transform.position.y, 2) + Math.Pow(transform.position.z, 2) );
-        distance = Math.Max(0.1f, distance);
-        double ax = - gravity * transform.position.x / Math.Pow(distance, 3);
-        double ay = - gravity * transform.position.y / Math.Pow(distance, 3);
-        double az = - gravity * transform.position.z / Math.Pow(distance, 3);
-        _velocity.x = (float)(_velocity.x + ax * Time.deltaTime);
-        _velocity.y = (float)(_velocity.y + ay * Time.deltaTime);
-        _velocity.z = (float)(_velocity.z + az * Time.deltaTime);
-        transform.transform.Translate(_velocity);
+        Vector3 position = transform.position - attractor.transform.position;
+ 
+        double distance = Math.Sqrt(
+            Math.Pow(position.x, 2) +
+            Math.Pow(position.y, 2) +
+            Math.Pow(position.z, 2)
+        );
+
+        distance = Math.Max(1f, distance);
+ 
+        double ax = -gravity * position.x / Math.Pow(distance, 3);
+        double ay = -gravity * position.y / Math.Pow(distance, 3);
+        double az = -gravity * position.z / Math.Pow(distance, 3);
+ 
+        velocity.x += (float)(ax * Time.deltaTime);
+        velocity.y += (float)(ay * Time.deltaTime);
+        velocity.z += (float)(az * Time.deltaTime);
+ 
+        transform.position += velocity * Time.deltaTime;
     }
 }
